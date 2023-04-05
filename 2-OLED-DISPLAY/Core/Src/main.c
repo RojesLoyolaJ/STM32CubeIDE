@@ -116,13 +116,15 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-	 HAL_UART_Receive(&huart2, &Data, 1, delay);
+	 HAL_UART_Receive(&huart2, &Data, 2, delay);
 
-	  if(Data == 0xAA)
-	  {
-		  	   SSD1306_GotoXY (0,0);
-	  	       SSD1306_Puts ("INTENT", &Font_11x18, 1);
-	  	       SSD1306_GotoXY (10, 30);
+	// if(huart2 == HAL_OK)
+	// {
+		  	   SSD1306_GotoXY (0,  0);
+	  	       SSD1306_Puts (  &Data   , &Font_11x18, 1);
+	  	       SSD1306_GotoXY (0, 30);
+	  	       SSD1306_Puts (" INTENT ", &Font_11x18, 1);
+	  	       SSD1306_GotoXY (0, 40);
 	  	       SSD1306_Puts (" DESIGN ", &Font_11x18, 1);
 	  	       SSD1306_UpdateScreen(); //display
 
@@ -131,7 +133,7 @@ int main(void)
 	  	       HAL_Delay (2000);
 
 	  	       SSD1306_ScrollRight(0X00, 0X0F);
-	  }
+	// }
 	  	      /* HAL_Delay(4000);
 
 	  	       SSD1306_ScrollLeft(0X00, 0X0F);
@@ -312,6 +314,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
 }
+
+/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  if (huart == &huart1) // check if the interrupt came from UART1
+  {
+    if (uart_rx_len < sizeof(uart_rx_buf)) // check if there is room in the buffer
+    {
+      uart_rx_buf[uart_rx_len++] = huart1.Instance->DR; // read the received byte and store it in the buffer
+    }
+  }
+}*/
 
 /* USER CODE BEGIN 4 */
 
