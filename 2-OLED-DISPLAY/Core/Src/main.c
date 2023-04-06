@@ -115,35 +115,41 @@ int main(void)
   //uart_rcv(&huart2, &Data, 1, delay);
 
 
-
+  uint8_t set[16] = {'\0'};
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_UART_Receive(&huart2, &Data, 2, delay);
+	  HAL_UART_Receive(&huart2, &set, 6, delay);
 
-    /* USER CODE END WHILE */
-	 if(Data == 0xAA)
-	 {
-		 HAL_UART_Transmit(&huart2, &Data, 2, delay);
+	  	  //strncpy(set,(char *)Data,strlen(Data));
+	  	  /* USER CODE END WHILE */
+		  // if(Data == 0xAA)
+	  if(1)
+	  {
+		 SSD1306_GotoXY (0, 0);
+		 SSD1306_Puts( set, &Font_11x18, 1);
+		 SSD1306_UpdateScreen();
+
 		 //SSD1306_Clear();
 		 //SSD1306_GotoXY (0,  0);
 		 //SSD1306_Puts ( &buff   , &Font_11x18, 1);
-		 SSD1306_GotoXY (0, 0);
-		 SSD1306_Puts (" INTENT ", &Font_11x18, 1);
-		 SSD1306_GotoXY (10, 30);
-		 SSD1306_Puts (" DESIGN ", &Font_11x18, 1);
-		 SSD1306_UpdateScreen(); //display
+		 //SSD1306_GotoXY (0, 0);
+		 //SSD1306_Puts (" INTENT ", &Font_11x18, 1);
+		 //SSD1306_GotoXY (10, 30);
+		 //SSD1306_Puts (" DESIGN ", &Font_11x18, 1);
+		 //SSD1306_UpdateScreen(); //display
 		 //HAL_Delay (2000);
-		 SSD1306_ScrollRight(0X00, 0X0F);
-	 }
+		 //SSD1306_ScrollRight(0X00, 0X0F);
+		 HAL_UART_Transmit(&huart2, &Data, 1, delay);
+	  }
 	   //HAL_Delay(4000);
 	   //SSD1306_ScrollLeft(0X00, 0X0F);
 	   //HAL_Delay(4000);
-	  if(Data == 0xAB)
+	  if(Data == 0xAB )
 	  {
-		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
+		  HAL_UART_Transmit(&huart2, &Data, 1, delay);
 		  SSD1306_GotoXY (0,0);
 		  SSD1306_Puts ("PRIVATE", &Font_11x18, 1);
 		  SSD1306_GotoXY (10, 30);
@@ -155,7 +161,7 @@ int main(void)
 	  }
 	  if(Data == 0xAC)
 	  {
-		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
+		  HAL_UART_Transmit(&huart2, &Data, 1, delay);
 		  SSD1306_Clear();
 	      SSD1306_DrawBitmap(0, 0, logo, 128, 50, 1);
 	      SSD1306_UpdateScreen();
