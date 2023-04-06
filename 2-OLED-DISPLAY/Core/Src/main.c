@@ -26,7 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define delay HAL_MAX_DELAY
-#define uart_rcv HAL_UART_Receive
+//#define uart_rcv HAL_UART_Receive
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +48,8 @@ I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart2;
 
+GPIO_InitTypeDef GPIO_InitStruct;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -57,6 +59,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART2_UART_Init(void);
+//void HAL_UART_MspInit(UART_HandleTypeDef*);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -104,90 +107,87 @@ int main(void)
 
   /* USER CODE END 2 */
 
+
+
   uint8_t Data;
+  //char buff[100];
 
   //uart_rcv(&huart2, &Data, 1, delay);
 
- // HAL_UART_Receive_IT(&huart2, &Data, 1);
+
+
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_UART_Receive(&huart2, &Data, 2, delay);
+
     /* USER CODE END WHILE */
-
-	 HAL_UART_Receive(&huart2, &Data, 2, delay);
-
-	// if(huart2 == HAL_OK)
-	// {
-		  	   SSD1306_GotoXY (0,  0);
-	  	       SSD1306_Puts (  &Data   , &Font_11x18, 1);
-	  	       SSD1306_GotoXY (0, 30);
-	  	       SSD1306_Puts (" INTENT ", &Font_11x18, 1);
-	  	       SSD1306_GotoXY (0, 40);
-	  	       SSD1306_Puts (" DESIGN ", &Font_11x18, 1);
-	  	       SSD1306_UpdateScreen(); //display
-
-
-
-	  	       HAL_Delay (2000);
-
-	  	       SSD1306_ScrollRight(0X00, 0X0F);
-	// }
-	  	      /* HAL_Delay(4000);
-
-	  	       SSD1306_ScrollLeft(0X00, 0X0F);
-	  	       HAL_Delay(4000);*/
+	 if(Data == 0xAA)
+	 {
+		 HAL_UART_Transmit(&huart2, &Data, 2, delay);
+		 //SSD1306_Clear();
+		 //SSD1306_GotoXY (0,  0);
+		 //SSD1306_Puts ( &buff   , &Font_11x18, 1);
+		 SSD1306_GotoXY (0, 0);
+		 SSD1306_Puts (" INTENT ", &Font_11x18, 1);
+		 SSD1306_GotoXY (10, 30);
+		 SSD1306_Puts (" DESIGN ", &Font_11x18, 1);
+		 SSD1306_UpdateScreen(); //display
+		 //HAL_Delay (2000);
+		 SSD1306_ScrollRight(0X00, 0X0F);
+	 }
+	   //HAL_Delay(4000);
+	   //SSD1306_ScrollLeft(0X00, 0X0F);
+	   //HAL_Delay(4000);
 	  if(Data == 0xAB)
 	  {
+		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
 		  SSD1306_GotoXY (0,0);
-		 	  	       SSD1306_Puts ("PRIVATE", &Font_11x18, 1);
-		 	  	       SSD1306_GotoXY (10, 30);
-		 	  	       SSD1306_Puts (" LIMITED ", &Font_11x18, 1);
-		 	  	       SSD1306_UpdateScreen(); //display
-
-
-
-		 	  	       HAL_Delay (2000);
-
-		 	  	       SSD1306_ScrollRight(0X00, 0X0F);
+		  SSD1306_Puts ("PRIVATE", &Font_11x18, 1);
+		  SSD1306_GotoXY (10, 30);
+		  SSD1306_Puts (" LIMITED ", &Font_11x18, 1);
+		  SSD1306_UpdateScreen(); //display
+		  HAL_Delay (2000);
+		  SSD1306_ScrollRight(0X00, 0X0F);
 
 	  }
 	  if(Data == 0xAC)
 	  {
-	  	       SSD1306_DrawBitmap(0, 0, logo, 128, 50, 1);
-	  	       SSD1306_UpdateScreen();
-
-	  	       //HAL_Delay(2000);
-
-	  	       SSD1306_ScrollRight(0X00, 0X0F);
-	  	      // HAL_Delay(9500);
-
-	  	     /*  SSD1306_ScrollLeft(0X00, 0X0F);
-	  	       HAL_Delay(4000);
-
-	  	       SSD1306_ScrollRight(0X00, 0X0F);
-	  	       HAL_Delay(4000);
-
-	  	       SSD1306_ScrollLeft(0X00, 0X0F);
-	  	       HAL_Delay(4000);*/
+		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
+		  SSD1306_Clear();
+	      SSD1306_DrawBitmap(0, 0, logo, 128, 50, 1);
+	      SSD1306_UpdateScreen();
+	      //HAL_Delay(2000);
+	      SSD1306_ScrollRight(0X00, 0X0F);
+	      //HAL_Delay(9500);
+	      //SSD1306_ScrollLeft(0X00, 0X0F);
+	  	  //HAL_Delay(4000);
+	      //SSD1306_ScrollRight(0X00, 0X0F);
+	      //HAL_Delay(4000);
+	      //SSD1306_ScrollLeft(0X00, 0X0F);
+	      //HAL_Delay(4000);*/
 	  }
 	  if(Data == 0xAD)
 	  {
-	  	       SSD1306_Stopscroll();
+		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
+	  	  SSD1306_Stopscroll();
 	  }
 
 	  if(Data == 0xBA)
-	  	       {
-	  	    	   SSD1306_InvertDisplay(1);
-	  	    	   	   HAL_Delay(1000);
-
-	  	       	   SSD1306_InvertDisplay(0);
-	  	       	   	  // HAL_Delay(1000);
+	  {
+		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
+		  SSD1306_Clear();
+		  SSD1306_InvertDisplay(1);
+		  HAL_Delay(1000);
+		  SSD1306_InvertDisplay(0);
+		  //HAL_Delay(1000);
 	  	       }
 	  if(Data == 0xBB)
 	  {
-	  	       SSD1306_Clear();
+		  HAL_UART_Transmit(&huart2, &Data, 2, delay);
+	  	  SSD1306_Clear();
 	  }
     /* USER CODE BEGIN 3 */
   }
@@ -344,6 +344,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+
 
 #ifdef  USE_FULL_ASSERT
 /**
